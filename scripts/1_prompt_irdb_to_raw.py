@@ -5,7 +5,7 @@ import os
 import csv
 
 # Insert local pyIRDecoder path so we can do "import pyIRDecoder.protocols"
-sys.path.insert(0, os.path.expanduser("~/pyIRDecoder"))
+sys.path.insert(0, os.path.expanduser("~/irdb_to_tuya/pyIRDecoder"))
 
 try:
     import pyIRDecoder.protocols as protocols
@@ -14,9 +14,8 @@ except ImportError as err:
     print("Details:", err)
     sys.exit(1)
 
-
 # Point this at your IRDB codes folder
-IRDB_PATH = os.path.expanduser("~/IRDB/irdb/codes")
+IRDB_PATH = os.path.expanduser("~/irdb_to_tuya/IRDB/irdb/codes")
 
 # A static list of known protocols in kdschlosser/pyIRDecoder (for easy reference).
 STATIC_PROTOCOLS = [
@@ -95,7 +94,6 @@ def generate_raw_signal(protocol_name, device_str, sub_device_str, function_str)
         else:
             subdev = int(sub_device_str)
 
-        # Now call encode(...) with those exact named arguments
         encoded = proto_obj.encode(
             device=dev,
             sub_device=subdev,
@@ -171,7 +169,6 @@ def main():
             if p:
                 all_protocols_in_csv.add(p)
 
-    # Show them sanitized
     sanitized_list = sorted({sanitize_protocol_name(x) for x in all_protocols_in_csv if x})
     auto_list_str = ", ".join(sanitized_list) if sanitized_list else "(none)"
 
@@ -188,7 +185,6 @@ def main():
         print("\nEnter one protocol to use for ALL rows (e.g. 'NEC', 'Sharp', 'Sharp1', etc.):")
         manual_protocol = input("> ").strip()
 
-    # We'll add some spacing before the first success/error block
     first_output = True
 
     # Step 5: process CSV rows
@@ -201,7 +197,6 @@ def main():
             subdev_str = row.get('subdevice', '-1')
             func_str = row.get('function', '0')
 
-            # Decide which protocol to use
             if manual_protocol:
                 proto_name = manual_protocol
             else:
@@ -209,21 +204,18 @@ def main():
 
             rlc, err_msg = generate_raw_signal(proto_name, device_str, subdev_str, func_str)
 
-            # Print spacing before the first output block
             if first_output:
                 print("\n\n")
                 first_output = False
 
             print("=" * 75)
             if rlc is not None:
-                # Success
                 print(f"Brand      : {chosen_brand}")
                 print(f"CSV File   : {chosen_csv}")
                 print(f"Function   : {func_name}")
                 print(f"Protocol   : {proto_name}")
                 print(f"Raw Timing : {rlc}")
             else:
-                # Error
                 print(f"[ERROR] Could NOT generate signal for '{func_name}'")
                 print(f" - Protocol : {proto_name}")
                 print(f" - Device   : {device_str}")
@@ -234,3 +226,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
