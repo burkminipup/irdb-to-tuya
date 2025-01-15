@@ -25,18 +25,14 @@ Future compatibility with additional protocols might be available with a "CSV fo
 
 ## ⚡ Workflow Overview
 
-### "brands" Usage:
-- `brands list` — List all available brands  
-- `brands list [PartialName]` — Search brands by partial name (not case-sensitive)  
-- `brands get [BrandName]` — Download IR codes for a brand (case-sensitive, must type the full name)  
-
 ### Single Remote Key to Tuya
 ```
 1_prompt_irdb_to_raw.py
 2_prompt_raw_to_tuya.py
 ```
 
-### Using multiple CSV paths or entire remote to Tuya (Useful when trying to find the right remote):
+### Using multiple CSV paths or entire remote to Tuya:
+Useful when trying to find the right remote
 ```
 grep -ri --include="*.csv" "term" "$HOME/IRDB/irdb/codes/[BRAND]/"
 3_bulk_irdb_to_raw.py
@@ -44,6 +40,11 @@ grep -ri --include="*.csv" "term" "$HOME/IRDB/irdb/codes/[BRAND]/"
 ```
 
 ## 🚀 Script Usage
+
+### "brands" Usage:
+- `brands list` — List all available brands  
+- `brands list [PartialName]` — Search brands by partial name (not case-sensitive)  
+- `brands get [BrandName]` — Download IR codes for a brand (case-sensitive, must type the full name)  
 
 ### Example converting entire remote codes, and then extracting a single Tuya code:
 ```
