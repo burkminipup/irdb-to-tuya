@@ -52,3 +52,4 @@ else
     echo "  brands get <BrandName>   - Download IR codes for a brand"
     echo "  brands list [Letter]     - List available brands, optionally filtered by starting letter"
     exit 1
+fi
