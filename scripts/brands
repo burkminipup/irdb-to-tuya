@@ -49,7 +49,8 @@ elif [ "$1" == "list" ]; then
     fi
 else
     echo "Usage:"
-    echo "  brands get <BrandName>   - Download IR codes for a brand"
-    echo "  brands list [Letter]     - List available brands, optionally filtered by starting letter"
+    echo "  brands get [Brand Name]   - Download IR codes for a brand"
+    echo "  brands list               - List all brands in irdb database"
+    echo "  brands list [Letter(s)]   - List brands by full or partial names - not case sensitive]"
     exit 1
 fi
