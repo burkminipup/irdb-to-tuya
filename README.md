@@ -21,9 +21,9 @@ Future compatibility with additional protocols might be available with a "CSV fo
 - Tuya TS1201  
 - Tuya UFO-11  
 
----
-
 ## ⚡ Workflow Overview
+
+The scripts are split into four individual python scripts to help manupulate the data in different ways. There is currently no single irdb to Tuya script, which is by design.
 
 ### Single Remote Key to Tuya
 ```
@@ -34,35 +34,32 @@ Future compatibility with additional protocols might be available with a "CSV fo
 ### Using multiple CSV paths or entire remote to Tuya:
 Useful when trying to find the right remote
 ```
-grep -ri --include="*.csv" "term" "$HOME/IRDB/irdb/codes/[BRAND]/"
 3_bulk_irdb_to_raw.py
 4_bulk_raw_to_tuya.py
 ```
 
 ## 🚀 Script Usage
 
-### "brands" Usage:
-- `brands list` — List all available brands  
-- `brands list [PartialName]` — Search brands by partial name (not case-sensitive)  
-- `brands get [BrandName]` — Download IR codes for a brand (case-sensitive, must type the full name)  
-
-### Example converting entire remote codes, and then extracting a single Tuya code:
+### brands
 ```
-root@irdb-tuya:~# brands list sa
+root@debian-irdb:~# brands
+Usage:
+  brands get [Brand Name]   - Download IR codes for a brand
+  brands list               - List all brands in irdb database
+  brands list [Letter(s)]   - List brands by full or partial names - not case sensitive]
+root@debian-irdb:~# brands list San
 Fetching available brands...
-SAB
-SABA
-Sagem
-Salora
-Samsung
-Samy
 Sansonic
 Sansui
 Sanyo
-Satelco
-root@irdb-tuya:~# brands get Sanyo
+root@debian-irdb:~# brands get Sanyo
 Downloading all IR codes for brand: Sanyo
 Download complete for Sanyo.
+root@debian-irdb:~#
+```
+
+### 1_prompt_irdb_to_raw.py
+```
 root@irdb-tuya:~# 1_prompt_irdb_to_raw.py 
 
 Available Brands:
@@ -121,8 +118,11 @@ Function   : KEY_SUBTITLE
 Protocol   : NEC
 Raw Timing : [9024, 4512, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 1692, 564, 564, 564, 1692, 564, 40884]
 ===========================================================================
+```
 
-root@irdb-tuya:~# 2_prompt_raw_to_tuya.py 
+### 2_prompt_raw_to_tuya.py
+```
+root@debian-irdb:~# 2_prompt_raw_to_tuya.py 
 Enter 'e' for Encode (Raw Timing) or 'd' for Decode (Tuya IR Code):
 > e
 
@@ -132,43 +132,48 @@ Enter the raw IR signal as a comma-separated list (e.g., 9000,4500,560,1690,...)
 Generated Tuya IR Code:
 BUAjoBE0AsABAZwG4AUD4AcB4AcT4AMn4AcH4AsT4AMH4AMLAbSf
 Enter 'e' for Encode (Raw Timing) or 'd' for Decode (Tuya IR Code):
-> 
-Invalid option. Please enter 'e' to encode or 'd' to decode.
-root@irdb-tuya:~# 
-```
-### Example converting specific buttons from multiple CSV files, and then converting all of them to Tuya code.
-(You can also bulk convert the entire remote from 1_prompt_irdb_to_raw.py):
+> d
 
+Enter the Tuya IR Code to decode:
+> BUAjoBE0AsABAZwG4AUD4AcB4AcT4AMn4AcH4AsT4AMH4AMLAbSf
+
+Decoded Raw IR Signal (µs):
+[9024, 4512, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 1692, 564, 564, 564, 1692, 564, 40884]
+root@debian-irdb:~# 
 ```
-root@irdb-tuya:~# grep -ri --include="*.csv" "setup" $HOME/irdb_to_tuya/IRDB/irdb/codes/Sanyo
+
+### 3_bulk_irdb_to_raw.py
+```
+root@debian-irdb:~# 3_bulk_irdb_to_raw.py 
+
+Available Brands:
+ - Sanyo
+
+Enter the brand folder name:
+> Sanyo
+
+Enter remote key name: setup
+
 /root/irdb_to_tuya/IRDB/irdb/codes/Sanyo/Unknown_sanyo-tv01/56,-1.csv:KEY_SETUP,NEC,56,-1,23
 /root/irdb_to_tuya/IRDB/irdb/codes/Sanyo/Unknown_RB-SL22/60,196.csv:KEY_SETUP,NEC,60,196,2
-root@irdb-tuya:~# 3_bulk_irdb_to_raw.py 
 
-Paste your CSV file path lines below. Press ENTER until all codes appear and then CTRL+D to exit):
-
-
-Hint: Use 'grep -ri --include="*.csv" "[REMOTE KEY]" $HOME/irdb_to_tuya/IRDB/irdb/codes/[BRAND]/' first to try multiple remotes.
-
-/root/irdb_to_tuya/IRDB/irdb/codes/Sanyo/Unknown_sanyo-tv01/56,-1.csv:KEY_SETUP,NEC,56,-1,23
-/root/irdb_to_tuya/IRDB/irdb/codes/Sanyo/Unknown_RB-SL22/60,196.csv:KEY_SETUP,NEC,60,196,2
-
+Do you want to convert the above keys? [Y/n]: 
 
 ===========================================================================
 File Path  : /root/irdb_to_tuya/IRDB/irdb/codes/Sanyo/Unknown_sanyo-tv01/56,-1.csv
 Function   : KEY_SETUP
 Raw Timing : [9024, 4512, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 45396]
 ===========================================================================
-
 ===========================================================================
 File Path  : /root/irdb_to_tuya/IRDB/irdb/codes/Sanyo/Unknown_RB-SL22/60,196.csv
 Function   : KEY_SETUP
 Raw Timing : [9024, 4512, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 1692, 564, 564, 564, 1692, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 564, 1692, 564, 564, 564, 1692, 564, 1692, 564, 1692, 564, 1692, 564, 1692, 564, 1692, 564, 40884]
 ===========================================================================
-```
-[Pressed Enter and then Ctrl+D]
+root@debian-irdb:~# 
 ```
 
+### 4_bulk_raw_to_tuya.py
+```
 root@irdb-tuya:~# 4_bulk_raw_to_tuya.py 
 
 Paste your formatted IR data below, beginning with and ending with '=' per decimal section.
