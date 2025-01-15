@@ -65,7 +65,7 @@ def process_input():
 
 def main():
     print("\nPaste your CSV file path lines below. Press ENTER until all codes appear and then CTRL+D to exit):\n")
-    print('\nHint: Use \'grep -ri --include="*.csv" "[REMOTE KEY]" ~/IRDB/irdb/codes/[BRAND]/\' first to try multiple remotes.\n')
+    print('\nHint: Use \'grep -ri --include="*.csv" "[REMOTE KEY]" $HOME/irdb_to_tuya/IRDB/irdb/codes/[BRAND]/\' first to try multiple remotes.\n')
     process_input()
 
 if __name__ == "__main__":
