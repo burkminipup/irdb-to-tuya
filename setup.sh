@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# IR Codes Guide (Tuya ZS06/ZS08/TS1201/UFO-11)
+# GitHub Source: https://github.com/burkminipup/irdb-to-tuya
+#
+# IRDB database codes to Tuya IR Blaster (Tuya ZS06/ZS08/TS1201/UFO-11)
 #
 # WARNING: This script is currently only compatible with NEC protocols (Or any other protocol in irdb CSV database that matches pyIRDecoder protocol naming conventions.
 #          Future compatibility with additional protocols might be available with a "CSV formatting" script
@@ -76,24 +78,6 @@ fi
 if ! grep -q 'export PYTHONPATH="$HOME/irdb_to_tuya/pyIRDecoder:$PYTHONPATH"' "$PROFILE_FILE"; then
     echo 'export PYTHONPATH="$HOME/irdb_to_tuya/pyIRDecoder:$PYTHONPATH"' >> "$PROFILE_FILE"
 fi
-#
-# -------------------------
-#
-# 5. Workflow Overview
-#
-# "brands" USAGE:
-# brands list                # List all available brands
-# brands list [PartialName]  # Search brands by partial name (not case-sensitive)
-# brands get [BrandName]     # Download IR codes for a brand (case-sensitive, must type full name)
-#
-# Gathering all raw timing codes from one remote, then converting a single one to Tuya:
-# ~/irdb_to_tuya/scripts/1_prompt_irdb_to_raw.py
-# ~/irdb_to_tuya/scripts/2_prompt_raw_to_tuya.py
-#
-# Using multiple CSV paths or entire remote to Tuya (Useful when trying to find the right remote):
-# grep -ri --include="*.csv" "REMOTE KEY" "$HOME/irdb_to_tuya/IRDB/irdb/codes/[BRAND]/"
-# ~/irdb_to_tuya/scripts/3_bulk_irdb_to_raw.py
-# ~/irdb_to_tuya/scripts/4_bulk_raw_to_tuya.py
 #
 # -------------------------
 #
