@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+REPO_URL="https://github.com/probonopd/irdb.git"
+LOCAL_DIR="$HOME/IRDB/irdb/codes"
+
+# Function to list available brands
+list_brands() {
+    echo "Fetching available brands..."
+    FILTER="${1,,}"
+    curl -s "https://api.github.com/repos/probonopd/irdb/contents/codes" | grep '"name"' | cut -d '"' -f 4 | while read -r BRAND; do
+        if [[ -z "$FILTER" || "${BRAND,,}" == "$FILTER"* ]]; then
+            echo "$BRAND"
+        fi
+    done
+}
+
+# Function to download a brand using sparse checkout
+download_brand() {
+    BRAND="$1"
+    echo "Downloading all IR codes for brand: $BRAND"
+
+    mkdir -p "$LOCAL_DIR"
+
+    # Initialize a temporary Git repo for sparse checkout
+    git init --quiet "$LOCAL_DIR/tmp_repo"
+    cd "$LOCAL_DIR/tmp_repo" || exit
+
+    git remote add -f origin "$REPO_URL" > /dev/null 2>&1
+
+    git config core.sparseCheckout true
+    echo "codes/$BRAND/*" >> .git/info/sparse-checkout
+
+    git pull origin master > /dev/null 2>&1
+
+    mv "codes/$BRAND" "$LOCAL_DIR/"
+
+    cd ..
+    rm -rf "$LOCAL_DIR/tmp_repo"
+
+    echo "Download complete for $BRAND."
+}
+
+# Main script logic
+if [ "$1" == "get" ] && [ -n "$2" ]; then
+    download_brand "$2"
+elif [ "$1" == "list" ]; then
+    if [ -n "$2" ]; then
+        list_brands "$2"
+    else
+        list_brands
+    fi
+else
+    echo "Usage:"
+    echo "  brands get <BrandName>   - Download IR codes for a brand"
+    echo "  brands list [Letter]     - List available brands, optionally filtered by starting letter"
+    exit 1
+fi
