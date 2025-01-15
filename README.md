@@ -1,33 +1,43 @@
 # irdb-to-tuya
-Scripts to convert irdb IR remote codes to decimal, as well as to Tuya IR blasters
+Scripts to convert irdb IR remote codes to decimal, as well as to Tuya IR blasters.
 
-Install scripts:
+## Install Script
+**COMING SOON...**
 
-COMING SOON...
+## ⚠️ WARNING
+This script is currently only compatible with **NEC protocols** (or any other protocols in the IRDB CSV database that match `pyIRDecoder` protocol naming conventions).  
 
-## WARNING: This script is currently only compatible with NEC protocols (Or any other protocol in irdb CVS database that matches pyIRDecoder protocol naming conventions.
-Future compatibility with additional protocols might be available with a "CSV formatting" script
+Future compatibility with additional protocols might be available with a "CSV formatting" script.
 
-Supported devices: IR Codes Guide (Tuya ZS06/ZS08/TS1201/UFO-11)
+**Supported devices:**  
+- Tuya ZS06  
+- Tuya ZS08  
+- Tuya TS1201  
+- Tuya UFO-11  
+
+---
 
 ## Workflow Overview
 
-"brands" USAGE:
- brands list                # List all available brands
- brands list [PartialName]  # Search brands by partial name (not case-sensitive)
- brands get [BrandName]     # Download IR codes for a brand (case-sensitive, must type full name)
+### "brands" Usage:
+- `brands list` — List all available brands  
+- `brands list [PartialName]` — Search brands by partial name (not case-sensitive)  
+- `brands get [BrandName]` — Download IR codes for a brand (case-sensitive, must type the full name)  
 
-Gathering all raw timing codes from one remote, then converting a single one to Tuya:
- 1_prompt_irdb_to_raw.py
- 2_prompt_raw_to_tuya.py
+### Single Remote Key to Tuya
+```bash
+1_prompt_irdb_to_raw.py
+2_prompt_raw_to_tuya.py
+```
 
-Using multiple CSV paths or entire remote to Tuya (Useful when trying to find the right remote):
- grep -ri --include="*.csv" "term" "$HOME/IRDB/irdb/codes/[BRAND]/"
- 3_bulk_irdb_to_raw.py
- 4_bulk_raw_to_tuya.py
-
+### Using multiple CSV paths or entire remote to Tuya (Useful when trying to find the right remote):
+```
+grep -ri --include="*.csv" "term" "$HOME/IRDB/irdb/codes/[BRAND]/"
+3_bulk_irdb_to_raw.py
+4_bulk_raw_to_tuya.py
+```
 ## Disclaimer
-This was coded and tested in Proxmox LXC enviornment using Debian. I cannot make any garentess that this will work in all Linux enviornments. Tested and functioning on Tuya UFO-11 (using Zigbee2MQTT).
+This was coded and tested in Proxmox LXC enviornment using Debian. I cannot make any guarantees that this will work in all Linux enviornments. Tested and functioning on Tuya UFO-11 (using Zigbee2MQTT).
 
 
 ## Credits
