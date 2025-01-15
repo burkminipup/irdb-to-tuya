@@ -15,6 +15,8 @@ This script is currently only compatible with **NEC protocols** (or any other pr
 
 Future compatibility with additional protocols might be available with a "CSV formatting" script.
 
+Folder paths are not relative (yet). Scripts will have to be rewritten to run outside of `$HOME`.
+
 **Supported devices:**  
 - Tuya ZS06  
 - Tuya ZS08  
