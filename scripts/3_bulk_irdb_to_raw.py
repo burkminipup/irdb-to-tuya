@@ -7,7 +7,6 @@ import subprocess
 import io
 
 def convert_to_positive(signal):
-    """Convert negative RLC timings to positive."""
     return [abs(x) for x in signal]
 
 def process_input():
@@ -48,13 +47,33 @@ def main():
     home = os.path.expanduser("~")
     base_dir = os.path.join(home, "irdb_to_tuya", "IRDB", "irdb", "codes")
 
+    if not os.path.isdir(base_dir) or not os.listdir(base_dir):
+        print("You have not added any brands to your IRDB codes directory.")
+        print('Please run "brands" first:\n')
+        print("""Usage:
+  brands get [Brand Name]   - Download IR codes for a brand
+  brands list               - List all brands in irdb database
+  brands list [Letter(s)]   - List brands by full or partial names - not case sensitive
+""")
+        return
+
     print("\nAvailable Brands:")
     brands = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
+    if not brands:
+        print("You have not added any brands to your IRDB codes directory.")
+        print('Please run "brands" first:\n')
+        print("""Usage:
+  brands get [Brand Name]   - Download IR codes for a brand
+  brands list               - List all brands in irdb database
+  brands list [Letter(s)]   - List brands by full or partial names - not case sensitive
+""")
+        return
+
     for b in brands:
         print(f" - {b}")
 
     brand = input("\nEnter the brand folder name:\n> ").strip()
-    key = input("\nEnter remote key name (or partial): ").strip()
+    key = input("\nEnter remote key name: ").strip()
 
     cmd = ["grep", "-ri", "--include=*.csv", key, os.path.join(base_dir, brand)]
     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
