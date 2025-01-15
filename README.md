@@ -3,9 +3,9 @@ Scripts to convert irdb IR remote codes to decimal, as well as to Tuya IR blaste
 
 ## 🛠️ Install Script
 
-Linux: ```bash <(curl -k "https://raw.githubusercontent.com/burkminipup/irdb-to-tuya/main/setup.sh") && source "$HOME/.bashrc"```
+Linux: <pre><code>bash &lt;(curl -k "https://raw.githubusercontent.com/burkminipup/irdb-to-tuya/main/setup.sh") && source "$HOME/.bashrc"</code></pre>
 
-macOS ```bash <(curl -k "https://raw.githubusercontent.com/burkminipup/irdb-to-tuya/main/setup.sh") && source "$HOME/.zshrc"```
+macOS: <pre><code>bash &lt;(curl -k "https://raw.githubusercontent.com/burkminipup/irdb-to-tuya/main/setup.sh") && source "$HOME/.zshrc"</code></pre>
 
 Note: macOS is currently untested. Dependencies: ```brew install git python3 nano wget```
 
