@@ -17,7 +17,7 @@ apt update && apt upgrade -y
 apt install -y git python3 python3-pip python3-numpy nano wget
 #
 # NOTICE: For macOS users:
-#         brew install git python3 nano
+#         brew install git python3 nano wget
 #
 # -------------------------
 #
