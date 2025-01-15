@@ -84,7 +84,7 @@ def main():
         return
 
     print(f"\n{lines_found}")
-    ans = input("\nDo you want to convert the following keys? [Y/n]: ").strip().lower()
+    ans = input("\nDo you want to convert the above keys? [Y/n]: ").strip().lower()
     if ans == "n":
         print("Exiting.")
         return
