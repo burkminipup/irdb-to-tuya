@@ -72,9 +72,8 @@ def generate_raw_signal(protocol_name, device_str, sub_device_str, function_str)
         rlc = convert_to_positive(encoded.original_rlc)
         return rlc, None
     except Exception as exc:
-        err_msg = (f"[ERROR] Could not encode with protocol '{protocol_name}' "
-                   f"(device={device_str}, sub={sub_device_str}, function={function_str}): {exc}")
-        return None, err_msg
+        # Shortened error message to match style in script 3
+        return None, f"[ERROR] {exc}"
 
 def get_available_brands(base_path):
     return [d for d in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, d))]
@@ -168,11 +167,14 @@ def main():
             device_str = row.get('device', '0')
             subdev_str = row.get('subdevice', '-1')
             func_str = row.get('function', '0')
+
             proto_name = manual_protocol if manual_protocol else sanitize_protocol_name(raw_proto)
             rlc, err_msg = generate_raw_signal(proto_name, device_str, subdev_str, func_str)
+
             if first_output:
                 print("\n\n")
                 first_output = False
+
             print("=" * 75)
             if rlc is not None:
                 print(f"Brand      : {chosen_brand}")
