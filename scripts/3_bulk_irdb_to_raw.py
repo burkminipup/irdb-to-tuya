@@ -9,39 +9,80 @@ import io
 def convert_to_positive(signal):
     return [abs(x) for x in signal]
 
-def process_input():
+def process_input(brand, base_dir):
     first_output = True
+    brand_dir = os.path.join(base_dir, brand)
+
     for line in sys.stdin:
         line = line.strip()
         if not line or ':' not in line:
             continue
+
         filepath, command = line.split(":", 1)
         parts = command.split(",")
         if len(parts) != 5:
-            print(f"[ERROR] Invalid format: {command}")
-            continue
-        function_name, protocol_name, device, sub_device, function = parts
-        proto_cls = getattr(protocols, protocol_name, None)
-        if not proto_cls:
-            print(f"[ERROR] Protocol '{protocol_name}' not found.")
-            continue
-        try:
-            proto_obj = proto_cls(parent=None)
-            device = int(device)
-            sub_device = 0 if sub_device == "-1" else int(sub_device)
-            function = int(function)
-            encoded = proto_obj.encode(device=device, sub_device=sub_device, function=function)
-            rlc = convert_to_positive(encoded.original_rlc)
             if first_output:
                 print("\n\n")
                 first_output = False
             print("=" * 75)
-            print(f"File Path  : {filepath}")
+            print(f"[ERROR] Invalid format: {command}")
+            print("=" * 75)
+            continue
+
+        function_name, protocol_name, device, sub_device, function = parts
+        proto_cls = getattr(protocols, protocol_name, None)
+        if not proto_cls:
+            if first_output:
+                print("\n\n")
+                first_output = False
+            print("=" * 75)
+            print(f"[ERROR] Could NOT generate signal for '{function_name}'")
+            print(f" - Protocol : {protocol_name}")
+            print(f" - Device   : {device}")
+            print(f" - SubDev   : {sub_device}")
+            print(f" - Function : {function}")
+            print(f" - Details  : [ERROR] Protocol '{protocol_name}' not found.")
+            print("=" * 75)
+            continue
+
+        try:
+            proto_obj = proto_cls(parent=None)
+            device_int = int(device)
+            sub_device_int = 0 if sub_device == "-1" else int(sub_device)
+            function_int = int(function)
+            encoded = proto_obj.encode(
+                device=device_int,
+                sub_device=sub_device_int,
+                function=function_int
+            )
+            rlc = convert_to_positive(encoded.original_rlc)
+
+            # Build a relative CSV path (like "Unknown_RB-SL22/60,196.csv")
+            csv_file = os.path.relpath(filepath, brand_dir)
+
+            if first_output:
+                print("\n\n")
+                first_output = False
+            print("=" * 75)
+            print(f"Brand      : {brand}")
+            print(f"CSV File   : {csv_file}")
             print(f"Function   : {function_name}")
+            print(f"Protocol   : {protocol_name}")
             print(f"Raw Timing : {rlc}")
             print("=" * 75)
+
         except Exception as e:
-            print(f"[ERROR] Failed to encode '{function_name}' with protocol '{protocol_name}': {e}")
+            if first_output:
+                print("\n\n")
+                first_output = False
+            print("=" * 75)
+            print(f"[ERROR] Could NOT generate signal for '{function_name}'")
+            print(f" - Protocol : {protocol_name}")
+            print(f" - Device   : {device}")
+            print(f" - SubDev   : {sub_device}")
+            print(f" - Function : {function}")
+            print(f" - Details  : [ERROR] {e}")
+            print("=" * 75)
 
 def main():
     home = os.path.expanduser("~")
@@ -90,7 +131,7 @@ def main():
         return
 
     sys.stdin = io.StringIO(lines_found + "\n")
-    process_input()
+    process_input(brand, base_dir)
 
 if __name__ == "__main__":
     main()
