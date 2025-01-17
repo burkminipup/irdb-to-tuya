@@ -18,6 +18,7 @@ If the protocol is not supported in pyIRDecoder, it will not work here.
 There is an option for manual protocol override that can help mitigate this. My suggestion is to see if there is an alternative protocol that closely matches supported ones and test it out.
 
 I cannot confirm if all the final outputted codes work without having access to the device recieving the IR signal. Since this is reasonabily impossible to do anything about, feel free to leave an issue and I can see if the issue lies in the code or not.
+
 Decimal raw timing is outputted in positive integers only, even when original timings might be negative.
 
 Folder paths are not relative (yet). Scripts will have to be rewritten to run outside of `$HOME`.
