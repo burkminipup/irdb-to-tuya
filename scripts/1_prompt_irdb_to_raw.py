@@ -64,15 +64,23 @@ def generate_raw_signal(protocol_name, device_str, sub_device_str, function_str)
         proto_obj = proto_cls(parent=None)
         dev = int(device_str) if device_str else 0
         func = int(function_str) if function_str else 0
-        if sub_device_str in [None, "", "-1"]:
-            subdev = 0
+
+        # Here we replicate script 3's logic to only include sub_device if supported
+        if hasattr(proto_obj, 'encode_parameters') and any(
+            param[0] == 'sub_device' for param in proto_obj.encode_parameters
+        ):
+            if sub_device_str in [None, "", "-1"]:
+                subdev = 0
+            else:
+                subdev = int(sub_device_str)
+            encoded = proto_obj.encode(device=dev, sub_device=subdev, function=func)
         else:
-            subdev = int(sub_device_str)
-        encoded = proto_obj.encode(device=dev, sub_device=subdev, function=func)
+            encoded = proto_obj.encode(device=dev, function=func)
+
         rlc = convert_to_positive(encoded.original_rlc)
         return rlc, None
     except Exception as exc:
-        # Shortened error message to match style in script 3
+        # Matches the style in script 3
         return None, f"[ERROR] {exc}"
 
 def get_available_brands(base_path):
@@ -155,7 +163,12 @@ def main():
 
     manual_protocol = None
     if ans in ("n", "no"):
-        print("\nEnter one protocol to use for ALL rows (e.g. 'NEC', 'Sharp', 'Sharp1', etc.):")
+        print("\nWarning: Ensure the protocol for each key matches the protocol listed on IRDB when manually changing the protocol for all keys.")
+        print("\n         Manual protocol selection is useful when the protocol name on IRDB does not exactly match or is not supported in pyIRDecoder.")
+        print("         Example: NEC1 is not supported with pyIRDecoder, but you can try NEC instead. I suggest looking online for best alternatives.")
+        print("         Hint: Looking at the sub_device column might be a good place to start. This script will ignore sub_device when the protocol called through pyIRDecoder doesn't support it.")
+        print("\n         You can run this script multiple times for each protocol.")
+        print("\nEnter one protocol to use for ALL keys")
         manual_protocol = input("> ").strip()
 
     first_output = True
