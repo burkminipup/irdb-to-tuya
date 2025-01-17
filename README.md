@@ -11,9 +11,13 @@ Note: macOS is currently untested. Dependencies: ```brew install git python3 nan
 
 
 ## ⚠️ WARNING
-This script is currently only compatible with **NEC protocols** (or any other protocols in the IRDB CSV database that match `pyIRDecoder` protocol naming conventions).  
+This script is currently working with most protcols. Some protocol naming formats from IRDB may still not match with pyIRDecoder names. 
 
-Future compatibility with additional protocols might be available with a "CSV formatting" script.
+If the protocol is not supported in pyIRDecoder, it will not work here.
+
+There is an option for manual protocol override that can help mitigate this. My suggestion is to see if there is an alternative protocol that closely matches supported ones and test it out.
+
+I cannot confirm if all the final outputted codes work without having access to the device recieving the IR signal. Since this is reasonabily impossible to do anything about, feel free to leave an issue and I can see if the issue lies in the code or not.
 
 Folder paths are not relative (yet). Scripts will have to be rewritten to run outside of `$HOME`.
 
